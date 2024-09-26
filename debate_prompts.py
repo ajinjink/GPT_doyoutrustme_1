@@ -2,7 +2,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 def create_debate_prompt():
    debate_template = ChatPromptTemplate.from_messages([
-       ("human", f"당신은 토론 참가자 {name} 입니다. 토론 주제는 {topic} 입니다. {name}은 {debate_style}로 토론을 합니다. 이 때 {name}이 할 말은?."),
+       ("human", f"당신은 토론 참가자 {name} 입니다. 토론 주제는 {topic} 입니다. {name}은 {debate_style}로 토론을 합니다. 상대방의 논거를 듣고 {name}이 할 말은?."),
        MessagesPlaceholder(variable_name = "debate")
    ])
 
