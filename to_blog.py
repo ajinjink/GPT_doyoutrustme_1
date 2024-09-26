@@ -3,24 +3,32 @@ from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 
 def create_blog_prompt() -> ChatPromptTemplate:
-    # TODO: 토론 결과를 블로그 글로 변환하기 위한 ChatPromptTemplate 작성
-    # 힌트: 토론 주제, 참가자, 주요 논점, 결론 등을 입력으로 받도록 설계
-    pass
+    template = """
+    당신은 블로그 작가입니다. 아래의 토론 결과를 보고 체계적으로 정리해서 블로그 포스트를 작성해주세요.
+
+    "topic": {topic},
+    "character1": {char1},
+    "character2": {char2},
+    "key_points": {key_points},
+    "winner": {winner},
+    "reason": {reason}
+    """
+    return ChatPromptTemplate.from_template(template)
 
 def debate_to_blog(debate_result: dict, llm: ChatOpenAI) -> str:
-    # TODO: create_blog_prompt()를 사용하여 프롬프트 템플릿 가져오기
-    # TODO: 프롬프트 템플릿, llm, StrOutputParser를 사용하여 체인 구성
-    # TODO: 체인 실행 및 결과 반환
-    # 힌트: debate_result에서 필요한 정보를 추출하여 프롬프트에 전달
-    pass
+    prompt_template = create_blog_prompt()
+    chain = prompt_template | llm | StrOutputParser()
+    blog_post = chain.invoke(debate_result)
+    return blog_post
 
-# 사용 예:
-# llm = ChatOpenAI()
-# debate_result = {
-#     "topic": "인공지능의 윤리",
-#     "participants": ["Alan Turing", "Elon Musk"],
-#     "key_points": ["AI의 책임성", "인간의 일자리 대체", "AI 발전의 통제"],
-#     "conclusion": "AI 발전은 엄격한 윤리적 가이드라인 하에 진행되어야 한다."
-# }
-# blog_post = debate_to_blog(debate_result, llm)
-# print(blog_post)
+llm = ChatOpenAI()
+debate_result = {
+    "topic": "자율주행자동차",
+    "char1": "철수",
+    "char2": "영희",
+    "key_points": ["교통사고의 윤리 문제", "인간의 일자리 대체", "교통규제법 필요"],
+    "winner": "영희",
+    "reason": "타당한 근거"
+}
+blog_post = debate_to_blog(debate_result, llm)
+print(blog_post)
